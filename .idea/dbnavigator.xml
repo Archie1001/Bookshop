@@ -26,7 +26,7 @@
     <show-object-properties value="true" />
     <loaded-nodes>
       <connection connection-id="0ebf8ecf-f445-41c4-b414-de728a0234cd">
-        <schema name="main" object-types="table, view, column" />
+        <schema name="main" object-types="table, view, constraint, index, column, dataset trigger" />
       </connection>
     </loaded-nodes>
   </component>
@@ -34,15 +34,19 @@
     <connection id="0ebf8ecf-f445-41c4-b414-de728a0234cd">
       <console name="Bookshop DB" type="STANDARD" schema="main" session="Main"><![CDATA[CREATE TABLE IF NOT EXISTS BOOKS
 ( 
-BookID INT PRIMARY KEY AUTOINCREMENT NOT NULL, 
+BookID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
 Title VARCHAR(50) NOT NULL,
-Author VARCHAR(50) NOT NULL
+Author VARCHAR(50) NOT NULL,
+Genre VARCHAR(20),
+PublicationDate INT(4)
 );
 
-INSERT INTO BOOKS ("Title", "Author") VALUES ('Jack the Reaper', 'Shawn Dean');
+INSERT INTO BOOKS ("Title", "Author", "Genre", "PublicationDate") VALUES ('Jack the Reaper', 'Shawn Dean', "Horror", 1994);
 
 SELECT * 
-FROM BOOKS]]></console>
+FROM BOOKS
+
+drop table BOOKS]]></console>
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
