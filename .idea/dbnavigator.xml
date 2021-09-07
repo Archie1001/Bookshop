@@ -26,7 +26,7 @@
     <show-object-properties value="true" />
     <loaded-nodes>
       <connection connection-id="0ebf8ecf-f445-41c4-b414-de728a0234cd">
-        <schema name="main" object-types="table, view, constraint, index, column, dataset trigger" />
+        <schema name="main" object-types="table, column" />
       </connection>
     </loaded-nodes>
   </component>
@@ -34,19 +34,54 @@
     <connection id="0ebf8ecf-f445-41c4-b414-de728a0234cd">
       <console name="Bookshop DB" type="STANDARD" schema="main" session="Main"><![CDATA[CREATE TABLE IF NOT EXISTS BOOKS
 ( 
-BookID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
-Title VARCHAR(50) NOT NULL,
-Author VARCHAR(50) NOT NULL,
-Genre VARCHAR(20),
-PublicationDate INT(4)
+book_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
+title VARCHAR(50) NOT NULL,
+author_first_name VARCHAR(30) NOT NULL,
+author_last_name VARCHAR(50) NOT NULL,
+genre VARCHAR(20),
+publication_Date INT(4)
 );
 
-INSERT INTO BOOKS ("Title", "Author", "Genre", "PublicationDate") VALUES ('Jack the Reaper', 'Shawn Dean', "Horror", 1994);
+CREATE TABLE IF NOT EXISTS LIST_OF_BOOKS
+(
+list_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+price FLOAT NOT NULL,
+book_id INT NOT NULL,
+FOREIGN KEY (book_id) REFERENCES BOOKS (book_id) ON update SET null ON DELETE CASCADE
+);
+
+
+INSERT INTO BOOKS ("title", "author_first_name", "author_last_name", "genre", "publication_date") VALUES ('Tom Sawyer', 'Mark', 'Twain', 'Novel', 1864);
+
+INSERT INTO BOOKS ("title", "author_first_name", "author_last_name", "genre", "publication_date") VALUES ('Conjuring', 'Jack', 'Reaper', 'Horror', 2010);
+
+
+
+SELECT COUNT ("book_id") FROM BOOKS WHERE "title" = "Conjuring"
+
+SELECT book_id FROM BOOKS WHERE "title" = "Tom Sawyer"
+
+
+
+INSERT INTO LIST_OF_BOOKS ("price", "book_id") VALUES (220, (SELECT book_id FROM BOOKS WHERE "title" = "Tom Sawyer"))
+
+
+DELETE FROM BOOKS WHERE "book_id" = 2
+
+
+select * from BOOKS
 
 SELECT * 
-FROM BOOKS
+FROM LIST_OF_BOOKS
 
-drop table BOOKS]]></console>
+select LIST_OF_BOOKS.*, BOOKS.* from LIST_OF_BOOKS RIGHT JOIN BOOKS ON (books_id = list_id)
+
+update BOOKS set title = "test" where book_id = 3;
+
+DROP TABLE BOOKS
+DROP TABLE LIST_OF_BOOKS
+
+pragma foreign_keys = 1;]]></console>
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">

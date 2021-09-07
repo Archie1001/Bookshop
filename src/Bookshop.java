@@ -1,9 +1,11 @@
+import org.sqlite.SQLiteException;
+
 import java.sql.*;
 
 public class Bookshop {
 
     private static final String QUERY_FOR_GET_ALL_BOOKS = "SELECT * FROM books";
-    private static final String QUERY_ADD_NEW_BOOK = "INSERT INTO BOOKS VALUES ()";
+    private static final String QUERY_ADD_NEW_BOOK = "INSERT INTO BOOKS (\"title\", \"author_first_name\", \"author_last_name\") " + "VALUES (?,?,?)";
 
     Connection connection = null;
 
@@ -15,6 +17,7 @@ public class Bookshop {
             Statement statement = connection.createStatement();
 
             ResultSet resultSet = statement.executeQuery(QUERY_ADD_NEW_BOOK);
+
         } catch (SQLException e) {
             System.out.println("Error connecting to DB");
             e.printStackTrace();
@@ -25,10 +28,10 @@ public class Bookshop {
         }
     }
 
-    public void removeBookByID() {
+    public void removeBookById() {
     }
 
-    public void showAllAvailableBooksByID() {
+    public void showAllAvailableBooksInShop() {
     }
 
     public void showAllBooksInShop() throws SQLException {
@@ -40,13 +43,23 @@ public class Bookshop {
 
             ResultSet resultSet = statement.executeQuery(QUERY_FOR_GET_ALL_BOOKS);
 
-            while (resultSet.next()) {
-                String title = resultSet.getString("Title");
-                String author = resultSet.getString("Author");
-                String genre = resultSet.getString("Genre");
-                int publicationDate = resultSet.getInt("PublicationDate");
+            ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
 
-                System.out.println(title + " | " + author + " | " + genre + " | " + publicationDate);
+            int i = 0;
+            while (i < resultSetMetaData.getColumnCount()) {
+                i++;
+                System.out.print(resultSetMetaData.getColumnName(i) + " | ");
+            }
+            System.out.print("\n");
+
+            while (resultSet.next()) {
+                String title = resultSet.getString("title");
+                String authorFirstName = resultSet.getString("author_first_name");
+                String authorLastName = resultSet.getString("author_last_name");
+                String genre = resultSet.getString("genre");
+                int publicationDate = resultSet.getInt("publication_date");
+
+                System.out.println(title + " | " + authorFirstName + " | " + authorLastName + " | " + genre + " | " + publicationDate);
             }
         } catch (SQLException e) {
             System.out.println("Error connecting to DB");
@@ -58,6 +71,6 @@ public class Bookshop {
         }
     }
 
-    public void setNumberOfAvailableBooksByID() {
+    public void setNumberOfAvailableBooksById() {
     }
 }
