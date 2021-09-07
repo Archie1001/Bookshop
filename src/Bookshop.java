@@ -1,11 +1,16 @@
-import org.sqlite.SQLiteException;
-
 import java.sql.*;
 
 public class Bookshop {
 
-    private static final String QUERY_FOR_GET_ALL_BOOKS = "SELECT * FROM books";
+
+    private static final String QUERY_FOR_GET_ALL_BOOKS_IN_SHOP = "SELECT LIST_OF_BOOKS.*, BOOKS.Title FROM LIST_OF_BOOKS JOIN BOOKS ON LIST_OF_BOOKS.Book_id = BOOKS.Book_id";
     private static final String QUERY_ADD_NEW_BOOK = "INSERT INTO BOOKS (\"title\", \"author_first_name\", \"author_last_name\") " + "VALUES (?,?,?)";
+    private static final String QUERY_REMOVE_BOOK_BY_ID = "DELETE FROM LIST_OF_BOOKS WHERE \"Book_id\" = ?";
+
+    private int price;
+    private int listId;
+
+    private boolean isAvailable;
 
     Connection connection = null;
 
@@ -14,9 +19,13 @@ public class Bookshop {
         try {
             connection = DbConnection.createDbConnection();
 
-            Statement statement = connection.createStatement();
+            PreparedStatement preparedStatement = connection.prepareStatement(QUERY_ADD_NEW_BOOK);
+            preparedStatement.setString(1, book.getTitle());
+            preparedStatement.setString(2, book.getAuthorFirstName());
+            preparedStatement.setString(3, book.getAuthorLastName());
 
-            ResultSet resultSet = statement.executeQuery(QUERY_ADD_NEW_BOOK);
+            int numberOfRecords = preparedStatement.executeUpdate();
+            System.out.println(numberOfRecords + " record inserted");
 
         } catch (SQLException e) {
             System.out.println("Error connecting to DB");
@@ -28,7 +37,25 @@ public class Bookshop {
         }
     }
 
-    public void removeBookById() {
+    public void removeBookById(int bookId) throws SQLException {
+
+        try {
+            connection = DbConnection.createDbConnection();
+
+            PreparedStatement preparedStatement = connection.prepareStatement(QUERY_REMOVE_BOOK_BY_ID);
+            preparedStatement.setInt(1, bookId);
+
+            int numberOfRecords = preparedStatement.executeUpdate();
+            System.out.println(numberOfRecords + " record removed");
+
+        } catch (SQLException e) {
+            System.out.println("Error connecting to DB");
+            e.printStackTrace();
+        } finally {
+            if (connection != null) {
+                connection.close();
+            }
+        }
     }
 
     public void showAllAvailableBooksInShop() {
@@ -41,25 +68,28 @@ public class Bookshop {
 
             Statement statement = connection.createStatement();
 
-            ResultSet resultSet = statement.executeQuery(QUERY_FOR_GET_ALL_BOOKS);
+            ResultSet resultSet = statement.executeQuery(QUERY_FOR_GET_ALL_BOOKS_IN_SHOP);
 
             ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
 
+
+            // printing out column order from List_of_books table
             int i = 0;
-            while (i < resultSetMetaData.getColumnCount()) {
+            while (i < resultSetMetaData.getColumnCount() - 1) {
                 i++;
                 System.out.print(resultSetMetaData.getColumnName(i) + " | ");
             }
-            System.out.print("\n");
+            System.out.println(resultSetMetaData.getColumnName(i + 1));
 
+            // printing out results
             while (resultSet.next()) {
-                String title = resultSet.getString("title");
-                String authorFirstName = resultSet.getString("author_first_name");
-                String authorLastName = resultSet.getString("author_last_name");
-                String genre = resultSet.getString("genre");
-                int publicationDate = resultSet.getInt("publication_date");
+                int listId = resultSet.getInt("List_id");
+                int bookId = resultSet.getInt("Book_id");
+                float price = resultSet.getFloat("Price");
+                int isAvailable = resultSet.getInt("Is_available");
+                String title = resultSet.getString("Title");
 
-                System.out.println(title + " | " + authorFirstName + " | " + authorLastName + " | " + genre + " | " + publicationDate);
+                System.out.println(listId + " | " + bookId + " | " + price + " | " + isAvailable + " | " + title);
             }
         } catch (SQLException e) {
             System.out.println("Error connecting to DB");

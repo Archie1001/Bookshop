@@ -26,7 +26,7 @@
     <show-object-properties value="true" />
     <loaded-nodes>
       <connection connection-id="0ebf8ecf-f445-41c4-b414-de728a0234cd">
-        <schema name="main" object-types="table, column" />
+        <schema name="main" object-types="table, view, column" />
       </connection>
     </loaded-nodes>
   </component>
@@ -34,39 +34,22 @@
     <connection id="0ebf8ecf-f445-41c4-b414-de728a0234cd">
       <console name="Bookshop DB" type="STANDARD" schema="main" session="Main"><![CDATA[CREATE TABLE IF NOT EXISTS BOOKS
 ( 
-book_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
-title VARCHAR(50) NOT NULL,
-author_first_name VARCHAR(30) NOT NULL,
-author_last_name VARCHAR(50) NOT NULL,
-genre VARCHAR(20),
-publication_Date INT(4)
+Book_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
+Title VARCHAR(50) NOT NULL,
+Author_first_name VARCHAR(30) NOT NULL,
+Author_last_name VARCHAR(50) NOT NULL,
+Genre VARCHAR(20),
+Publication_date INT(4)
 );
 
 CREATE TABLE IF NOT EXISTS LIST_OF_BOOKS
 (
-list_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-price FLOAT NOT NULL,
-book_id INT NOT NULL,
-FOREIGN KEY (book_id) REFERENCES BOOKS (book_id) ON update SET null ON DELETE CASCADE
+List_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+Book_id INT NOT NULL,
+Price FLOAT NOT NULL,
+Is_available BOOLEAN NOT NULL CHECK (Is_available IN (0, 1)),
+FOREIGN KEY (Book_id) REFERENCES BOOKS (Book_id) ON update SET null ON DELETE CASCADE
 );
-
-
-INSERT INTO BOOKS ("title", "author_first_name", "author_last_name", "genre", "publication_date") VALUES ('Tom Sawyer', 'Mark', 'Twain', 'Novel', 1864);
-
-INSERT INTO BOOKS ("title", "author_first_name", "author_last_name", "genre", "publication_date") VALUES ('Conjuring', 'Jack', 'Reaper', 'Horror', 2010);
-
-
-
-SELECT COUNT ("book_id") FROM BOOKS WHERE "title" = "Conjuring"
-
-SELECT book_id FROM BOOKS WHERE "title" = "Tom Sawyer"
-
-
-
-INSERT INTO LIST_OF_BOOKS ("price", "book_id") VALUES (220, (SELECT book_id FROM BOOKS WHERE "title" = "Tom Sawyer"))
-
-
-DELETE FROM BOOKS WHERE "book_id" = 2
 
 
 select * from BOOKS
@@ -74,14 +57,55 @@ select * from BOOKS
 SELECT * 
 FROM LIST_OF_BOOKS
 
-select LIST_OF_BOOKS.*, BOOKS.* from LIST_OF_BOOKS RIGHT JOIN BOOKS ON (books_id = list_id)
 
-update BOOKS set title = "test" where book_id = 3;
+
+update BOOKS set title = "Metro 2035" where book_id = 3
+
+
+SELECT COUNT ("Book_id") FROM BOOKS WHERE "Title" = "Conjuring"
+
+SELECT Book_id FROM BOOKS WHERE "Title" = "Tom Sawyer"
+
+
+
+
+DELETE FROM BOOKS WHERE "Book_id" = 7
+
+delete from LIST_OF_BOOKS where "Book_id" = 6
+
+update LIST_OF_BOOKS set book_id = 1, price = 9.99
+
 
 DROP TABLE BOOKS
 DROP TABLE LIST_OF_BOOKS
 
-pragma foreign_keys = 1;]]></console>
+pragma foreign_keys]]></console>
+      <console name="Insert Books" type="STANDARD" schema="main" session="Main"><![CDATA[INSERT INTO BOOKS ("Title", "Author_first_name", "Author_last_name", "Genre", "Publication_date") VALUES ('Tom Sawyer', 'Mark', 'Twain', 'Novel', 1864);
+
+INSERT INTO BOOKS ("Title", "Author_first_name", "Author_last_name", "Genre", "Publication_date") VALUES ('Conjuring', 'Jack', 'Reaper', 'Horror', 2010);
+
+INSERT INTO BOOKS ("Title", "Author_first_name", "Author_last_name", "Genre", "Publication_date") VALUES ('Metro 2035', 'Dimitry', 'Glukhovsky', 'Science Fiction', 2015);
+
+INSERT INTO BOOKS ("Title", "Author_first_name", "Author_last_name", "Genre", "Publication_date") VALUES ('Lord of the Rings', 'J.R.R.', 'Tolkien', 'Fantasy', 2001);
+
+INSERT INTO BOOKS ("Title", "Author_first_name", "Author_last_name", "Genre", "Publication_date") VALUES ('The Witcher', 'Andrzej.', 'Sapkowski', 'Fantasy', 2014);
+
+
+
+
+INSERT INTO LIST_OF_BOOKS ("Book_id", "Price", "Is_available") VALUES ((SELECT Book_id FROM BOOKS WHERE "Title" = "Tom Sawyer"), 9.99, 1)
+
+INSERT INTO LIST_OF_BOOKS ("Book_id", "Price", "Is_available") VALUES ((SELECT Book_id FROM BOOKS WHERE "Title" = "Conjuring"), 25.50, 1)
+
+INSERT INTO LIST_OF_BOOKS ("Book_id", "Price", "Is_available") VALUES ((SELECT Book_id FROM BOOKS WHERE "Title" = "Metro 2035"), 39, 0)
+
+INSERT INTO LIST_OF_BOOKS ("Book_id", "Price", "Is_available") VALUES ((SELECT Book_id FROM BOOKS WHERE "Title" = "The Witcher"), 34.99, 1)
+
+
+
+Select LIST_OF_BOOKS.*, BOOKS.title from LIST_OF_BOOKS JOIN BOOKS ON LIST_OF_BOOKS.book_id = BOOKS.book_id
+
+select * from LIST_OF_BOOKS]]></console>
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
@@ -92,6 +116,7 @@ pragma foreign_keys = 1;]]></console>
   </component>
   <component name="DBNavigator.Project.DatasetFilterManager">
     <filter-actions connection-id="0ebf8ecf-f445-41c4-b414-de728a0234cd" dataset="main.sqlite_sequence" active-filter-id="" />
+    <filter-actions connection-id="0ebf8ecf-f445-41c4-b414-de728a0234cd" dataset="main.LIST_OF_BOOKS" active-filter-id="" />
   </component>
   <component name="DBNavigator.Project.EditorStateManager">
     <last-used-providers />
