@@ -11,13 +11,19 @@ public class Main {
 //        System.out.println("Adding new book: " + book1.getTitle());
 //        bookshop.addNewBook(book1);
 
-        System.out.println("\nShow all books in Bookshop: ");
-        bookshop.showAllBooksInShop();
-
         System.out.println("\nShow all books: ");
         book1.showAllBooks();
 
-//        System.out.println("\nRemove book by id");
-//        bookshop.removeBookById(6);
+        System.out.println("\nShow all books in Bookshop: ");
+        bookshop.showAllBooksInShop();
+
+        System.out.println("\nShow all available books in shop");
+        bookshop.showAllAvailableBooksInShop();
+
+        System.out.println("\nRemove all books from the shop by id");
+        bookshop.removeBookById(5);
+
+        System.out.println("\nShow all available books in shop");
+        bookshop.showAllAvailableBooksInShop();
     }
 }
