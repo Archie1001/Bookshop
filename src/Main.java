@@ -1,29 +1,33 @@
 import java.sql.SQLException;
 
 public class Main {
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) {
 
-        Book book1 = new Book("Harry Potter", "J.K.", "Rowling");
-        book1.setGenre("Novel");
+        try {
+            Book book1 = new Book("Harry Potter", "J.K.", "Rowling", "Fantasy", 2001, 5, 7.50);
+//            book1.setGenre("Novel");
 
-        Bookshop bookshop = new Bookshop();
+            Bookshop bookshop = new Bookshop();
 
-//        System.out.println("Adding new book: " + book1.getTitle());
-//        bookshop.addNewBook(book1);
+            bookshop.addNewBook(book1);
 
-        System.out.println("\nShow all books: ");
-        book1.showAllBooks();
+            book1.showAllBooks();
 
-        System.out.println("\nShow all books in Bookshop: ");
-        bookshop.showAllBooksInShop();
+            bookshop.showAllBooksInShop();
 
-        System.out.println("\nShow all available books in shop");
-        bookshop.showAllAvailableBooksInShop();
+//            bookshop.setNumberOfAvailableBooksById(1, 6);
+//
+//            bookshop.showAllAvailableBooksInShop();
+//
+//            bookshop.removeBookById(10);
+//
+//            book1.showAllBooks();
+//
+//            bookshop.showAllBooksInShop();
 
-        System.out.println("\nRemove all books from the shop by id");
-        bookshop.removeBookById(5);
-
-        System.out.println("\nShow all available books in shop");
-        bookshop.showAllAvailableBooksInShop();
+        } catch (SQLException e) {
+            System.out.println("Error connecting to DB");
+            e.printStackTrace();
+        }
     }
 }

@@ -1,41 +1,70 @@
 import java.sql.*;
 
-public class Book {
+public class Book implements SqlQueries {
 
-    private static final String QUERY_FOR_GET_ALL_BOOKS = "SELECT * FROM BOOKS";
-
-    final private String title;
-    final private String authorFirstName;
-    final private String authorLastName;
+    private String title;
+    private String authorFirstName;
+    private String authorLastName;
     private String genre;
 
-    private int bookId;
+//    private int bookId;
     private int publicationDate;
+    private int availableBooks;
+    private double price;
 
     Connection connection = null;
 
-    public Book(String title, String authorFirstName, String authorLastName) {
+    public Book(String title, String authorFirstName, String authorLastName, String genre, int publicationDate, int availableBooks, double price) {
         this.title = title;
         this.authorFirstName = authorFirstName;
         this.authorLastName = authorLastName;
+        this.genre = genre;
+        this.publicationDate = publicationDate;
+        this.availableBooks = availableBooks;
+        this.price = price;
     }
+
+//    public int getBookId() {
+//        return bookId;
+//    }
 
     public String getTitle() {
         if (title == null) {
-            System.out.println("No value");
+            return "N/A";
         }
         return title;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public String getAuthorFirstName() {
+        if (authorFirstName == null) {
+            return "N/A";
+        }
         return authorFirstName;
     }
 
+    public void setAuthorFirstName(String authorFirstName) {
+        this.authorFirstName = authorFirstName;
+    }
+
     public String getAuthorLastName() {
+        if (authorLastName == null) {
+            return "N/A";
+        }
         return authorLastName;
     }
 
+    public void setAuthorLastName(String authorLastName) {
+        this.authorLastName = authorLastName;
+    }
+
     public String getGenre() {
+        if (genre == null) {
+            return "N/A";
+        }
         return genre;
     }
 
@@ -44,6 +73,9 @@ public class Book {
     }
 
     public int getPublicationDate() {
+        if (publicationDate == 0) {
+            return -1;
+        }
         return publicationDate;
     }
 
@@ -51,8 +83,26 @@ public class Book {
         this.publicationDate = publicationDate;
     }
 
-    public int getBookId() {
-        return bookId;
+    public int getAvailableBooks() {
+        if (availableBooks == 0) {
+            return -1;
+        }
+        return availableBooks;
+    }
+
+    public void setAvailableBooks(int availableBooks) {
+        this.availableBooks = availableBooks;
+    }
+
+    public double getPrice() {
+        if (price == 0) {
+            return -1;
+        }
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 
     public void showAllBooks() throws SQLException {
@@ -66,6 +116,7 @@ public class Book {
 
             ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
 
+            System.out.println("Show all books: \n");
 
             // printing out column order from List_of_books table
             int i = 0;
@@ -78,14 +129,16 @@ public class Book {
             // printing out results
             while (resultSet.next()) {
                 int bookId = resultSet.getInt("Book_id");
-                String title = resultSet.getString("title");
-                String authorFirstName = resultSet.getString("author_first_name");
-                String authorLastName = resultSet.getString("author_last_name");
-                String genre = resultSet.getString("genre");
-                int publicationDate = resultSet.getInt("publication_date");
+                String title = resultSet.getString("Title");
+                String authorFirstName = resultSet.getString("Author_first_name");
+                String authorLastName = resultSet.getString("Author_last_name");
+                String genre = resultSet.getString("Genre");
+                int publicationDate = resultSet.getInt("Publication_date");
+                int availableBooks = resultSet.getInt("Available_books");
 
-                System.out.println(bookId + " | " + title + " | " + authorFirstName + " | " + authorLastName + " | " + genre + " | " + publicationDate);
+                System.out.println(bookId + " | " + title + " | " + authorFirstName + " | " + authorLastName + " | " + genre + " | " + publicationDate + " | " + availableBooks);
             }
+            System.out.println("");
         } catch (SQLException e) {
             System.out.println("Error connecting to DB");
             e.printStackTrace();
