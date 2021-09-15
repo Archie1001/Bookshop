@@ -1,0 +1,87 @@
+CREATE TABLE IF NOT EXISTS BOOKS
+(
+Book_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+Title VARCHAR(50) NOT NULL,
+Author_first_name VARCHAR(30) NOT NULL,
+Author_last_name VARCHAR(50) NOT NULL,
+Genre VARCHAR(20),
+Publication_date INT(4),
+Available_books INT(3)
+);
+
+CREATE TABLE IF NOT EXISTS LIST_OF_BOOKS
+(
+List_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+Book_id INT NOT NULL,
+Price FLOAT NOT NULL,
+FOREIGN KEY (Book_id) REFERENCES BOOKS (Book_id) ON update SET null ON DELETE CASCADE
+);
+
+
+select * from BOOKS
+
+SELECT *
+FROM LIST_OF_BOOKS
+
+
+
+update BOOKS set title = "Metro 2035" where book_id = 3
+
+
+SELECT COUNT ("Book_id") FROM BOOKS WHERE "Title" = "Conjuring"
+
+SELECT Book_id FROM BOOKS WHERE "Title" = "Tom Sawyer"
+
+
+
+
+DELETE FROM BOOKS WHERE "Book_id" = 7
+
+delete from LIST_OF_BOOKS where "Book_id" = 6
+
+update LIST_OF_BOOKS set book_id = 1, price = 9.99
+
+update BOOKS set Available_books = 6 WHERE "Book_id" = 1
+
+DROP TABLE BOOKS
+DROP TABLE LIST_OF_BOOKS
+
+pragma foreign_keys
+
+
+----------------------------------------------------------------
+
+
+INSERT INTO BOOKS ("Title", "Author_first_name", "Author_last_name", "Genre", "Publication_date", "Available_books") VALUES ('Tom Sawyer', 'Mark', 'Twain', 'Novel', 1864, 5);
+
+INSERT INTO BOOKS ("Title", "Author_first_name", "Author_last_name", "Genre", "Publication_date", "Available_books") VALUES ('Conjuring', 'Jack', 'Reaper', 'Horror', 2010, 8);
+
+INSERT INTO BOOKS ("Title", "Author_first_name", "Author_last_name", "Genre", "Publication_date", "Available_books") VALUES ('Metro 2035', 'Dimitry', 'Glukhovsky', 'Science Fiction', 2015, 12);
+
+INSERT INTO BOOKS ("Title", "Author_first_name", "Author_last_name", "Genre", "Publication_date", "Available_books") VALUES ('Lord of the Rings', 'J.R.R.', 'Tolkien', 'Fantasy', 2001, 4);
+
+INSERT INTO BOOKS ("Title", "Author_first_name", "Author_last_name", "Genre", "Publication_date", "Available_books") VALUES ('The Witcher', 'Andrzej', 'Sapkowski', 'Fantasy', 2014, 24);
+
+
+
+
+INSERT INTO LIST_OF_BOOKS ("Book_id", "Price") VALUES ((SELECT Book_id FROM BOOKS WHERE "Title" = "Tom Sawyer"), 9.99)
+
+INSERT INTO LIST_OF_BOOKS ("Book_id", "Price") VALUES ((SELECT Book_id FROM BOOKS WHERE "Title" = "Conjuring"), 25.50)
+
+INSERT INTO LIST_OF_BOOKS ("Book_id", "Price") VALUES ((SELECT Book_id FROM BOOKS WHERE "Title" = "Metro 2035"), 39)
+
+INSERT INTO LIST_OF_BOOKS ("Book_id", "Price") VALUES ((SELECT Book_id FROM BOOKS WHERE "Title" = "The Witcher"), 34.99)
+
+INSERT INTO LIST_OF_BOOKS ("Book_id", "Price") VALUES ((SELECT Book_id FROM BOOKS WHERE "Title" = "Lord of the Rings"), 49.50)
+
+INSERT INTO LIST_OF_BOOKS ("Book_id", "Price") VALUES ((SELECT Book_id FROM BOOKS WHERE "Title" = "Harry Potter"), 7)
+
+
+SELECT LIST_OF_BOOKS.*, BOOKS.Title, BOOKS.Available_books FROM LIST_OF_BOOKS JOIN BOOKS ON LIST_OF_BOOKS.book_id = BOOKS.book_id
+
+select * from LIST_OF_BOOKS
+
+select * from BOOKS
+
+SELECT LIST_OF_BOOKS.List_id, LIST_OF_BOOKS.Book_id, LIST_OF_BOOKS.Price, BOOKS.Title, BOOKS.Available_books FROM LIST_OF_BOOKS JOIN BOOKS ON LIST_OF_BOOKS.Book_id = BOOKS.Book_id WHERE Available_books != 0
