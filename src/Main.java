@@ -11,25 +11,16 @@ public class Main {
 
 //            bookshop.addNewBook(book1);
 
-            bookshop.showAllBooksInShop();
-//            bookshop.showAllAvailableBooksInShop();
+//            bookshop.showAllBooksInShop();
+//
+//            RandomBook.addRandomBook();
 
-//            RandomBook.getRandomBook();
+            Utils.getUsedTitles();
 //
-            bookshop.sellBookById(5, 1);
-            bookshop.showAllBooksInShop();
-
-            bookshop.refundBookById(5);
-            bookshop.showAllBooksInShop();
-
-//            bookshop.setNumberOfAvailableBooksById(1, 6);
+//            bookshop.sellBookById(5, 1);
+//            bookshop.showAllBooksInShop();
 //
-//            bookshop.showAllAvailableBooksInShop();
-//
-//            bookshop.removeBookById(11);
-//
-//            book1.showAllBooks();
-//
+//            bookshop.refundBookById(5);
 //            bookshop.showAllBooksInShop();
 
         } catch (SQLException e) {

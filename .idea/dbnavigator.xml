@@ -57,7 +57,7 @@ select * from BOOKS
 SELECT * 
 FROM LIST_OF_BOOKS
 
-
+SELECT Title FROM BOOKS
 
 update BOOKS set title = "Metro 2035" where book_id = 3
 

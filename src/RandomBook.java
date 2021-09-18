@@ -31,7 +31,7 @@ public class RandomBook {
         return ThreadLocalRandom.current().nextDouble(min, max);
     }
 
-    public static void getRandomBook() {
+    public static void addRandomBook() {
         String title = getRandomString(randomTitle);
         String authorFirstName = getRandomString(randomAuthorFirstName);
         String authorLastName = getRandomString(randomAuthorLastName);

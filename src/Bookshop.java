@@ -2,7 +2,7 @@ import java.sql.*;
 
 public class Bookshop implements SqlQueries {
 
-    private Connection connection = null;
+    Connection connection = null;
 
     public void addNewBook(Book book) throws SQLException {
 
@@ -66,14 +66,14 @@ public class Bookshop implements SqlQueries {
     public void showAllBooksInShop() throws SQLException {
 
         System.out.println("Show all books in Bookshop: \n");
-        DbConnection.executeQueryListOfBooks(QUERY_GET_ALL_BOOKS_IN_SHOP);
+        Utils.executeQueryListOfBooks(QUERY_GET_ALL_BOOKS_IN_SHOP);
         System.out.println();
     }
 
     public void showAllAvailableBooksInShop() throws SQLException {
 
         System.out.println("Show all available books in shop\n");
-        DbConnection.executeQueryListOfBooks(QUERY_GET_ALL_AVAILABLE_BOOKS);
+        Utils.executeQueryListOfBooks(QUERY_GET_ALL_AVAILABLE_BOOKS);
         System.out.println();
     }
 
@@ -100,30 +100,9 @@ public class Bookshop implements SqlQueries {
         }
     }
 
-    public int getAvailableBooksById(int bookId) throws SQLException {
-
-        try {
-            connection = DbConnection.createDbConnection();
-
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(QUERY_GET_NUMBER_OF_AVAILABLE_BOOKS_BY_ID + bookId);
-
-            return resultSet.getInt("Available_books");
-
-        } catch (SQLException e) {
-            System.out.println("Error connecting to DB");
-            e.printStackTrace();
-            return 0;
-        } finally {
-            if (connection != null){
-                connection.close();
-            }
-        }
-    }
-
     public void sellBookById(int bookId, int numberOfBooks) throws SQLException {
 
-        int availableBooks = getAvailableBooksById(bookId);
+        int availableBooks = Utils.getAvailableBooksById(bookId);
 
         if (availableBooks - numberOfBooks >= 0) {
             setNumberOfAvailableBooksById(bookId, availableBooks - numberOfBooks);
@@ -136,7 +115,7 @@ public class Bookshop implements SqlQueries {
 
     public void refundBookById(int bookId) throws SQLException{
 
-        int availableBooks = getAvailableBooksById(bookId);
+        int availableBooks = Utils.getAvailableBooksById(bookId);
 
         setNumberOfAvailableBooksById(bookId, (availableBooks + 1));
         System.out.println("Refunded a book with id " + bookId + "\nNumber of available books: " + (availableBooks + 1));
