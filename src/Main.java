@@ -9,17 +9,24 @@ public class Main {
 
             Bookshop bookshop = new Bookshop();
 
-            bookshop.addNewBook(book1);
+//            bookshop.addNewBook(book1);
 
-            book1.showAllBooks();
+            bookshop.showAllBooksInShop();
+//            bookshop.showAllAvailableBooksInShop();
 
+//            RandomBook.getRandomBook();
+//
+            bookshop.sellBookById(5, 1);
+            bookshop.showAllBooksInShop();
+
+            bookshop.refundBookById(5);
             bookshop.showAllBooksInShop();
 
 //            bookshop.setNumberOfAvailableBooksById(1, 6);
 //
 //            bookshop.showAllAvailableBooksInShop();
 //
-//            bookshop.removeBookById(10);
+//            bookshop.removeBookById(11);
 //
 //            book1.showAllBooks();
 //

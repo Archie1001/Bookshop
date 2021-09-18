@@ -7,7 +7,6 @@ public class Book implements SqlQueries {
     private String authorLastName;
     private String genre;
 
-//    private int bookId;
     private int publicationDate;
     private int availableBooks;
     private double price;
@@ -23,10 +22,6 @@ public class Book implements SqlQueries {
         this.availableBooks = availableBooks;
         this.price = price;
     }
-
-//    public int getBookId() {
-//        return bookId;
-//    }
 
     public String getTitle() {
         if (title == null) {
@@ -111,9 +106,7 @@ public class Book implements SqlQueries {
             connection = DbConnection.createDbConnection();
 
             Statement statement = connection.createStatement();
-
-            ResultSet resultSet = statement.executeQuery(QUERY_FOR_GET_ALL_BOOKS);
-
+            ResultSet resultSet = statement.executeQuery(QUERY_GET_ALL_BOOKS);
             ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
 
             System.out.println("Show all books: \n");
@@ -143,7 +136,7 @@ public class Book implements SqlQueries {
             System.out.println("Error connecting to DB");
             e.printStackTrace();
         } finally {
-            if (connection != null) {
+            if (connection != null){
                 connection.close();
             }
         }

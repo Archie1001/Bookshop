@@ -10,7 +10,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/sqlite/sqlite-jdbc-3.36.0.3.jar!/" />
+          <root url="jar://C:/SQLite/connection/sqlite-jdbc-3.36.0.3.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

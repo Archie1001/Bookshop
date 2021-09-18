@@ -2,9 +2,7 @@ import java.sql.*;
 
 public class Bookshop implements SqlQueries {
 
-//    private int listId;
-
-    Connection connection = null;
+    private Connection connection = null;
 
     public void addNewBook(Book book) throws SQLException {
 
@@ -19,18 +17,20 @@ public class Bookshop implements SqlQueries {
             preparedStatement.setInt(5, book.getPublicationDate());
             preparedStatement.setInt(6, book.getAvailableBooks());
 
-            connection.prepareStatement(QUERY_ADD_NEW_BOOK_TO_SHOP);
+            int numberOfRecords = preparedStatement.executeUpdate();
+            System.out.println("Adding new book: " + book.getTitle() + "\n" + numberOfRecords + " record(s) inserted\n");
+
+            preparedStatement = connection.prepareStatement(QUERY_ADD_NEW_BOOK_TO_SHOP);
             preparedStatement.setString(1, book.getTitle());
             preparedStatement.setDouble(2, book.getPrice());
 
-            int numberOfRecords = preparedStatement.executeUpdate();
-            System.out.println("Adding new book: " + book.getTitle() + "\n" + numberOfRecords + " record(s) inserted\n");
+            preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
             System.out.println("Error connecting to DB");
             e.printStackTrace();
         } finally {
-            if (connection != null) {
+            if (connection != null){
                 connection.close();
             }
         }
@@ -43,59 +43,21 @@ public class Bookshop implements SqlQueries {
 
             PreparedStatement preparedStatement = connection.prepareStatement(QUERY_REMOVE_BOOK_BY_ID);
             preparedStatement.setInt(1, bookId);
-            connection.prepareStatement(QUERY_REMOVE_BOOK_BY_ID_FROM_LIST);
-            preparedStatement.setInt(1, bookId);
 
             int numberOfRecords = preparedStatement.executeUpdate();
+            System.out.println("Removing book from \"Books\" table with id: " + bookId + "\n" + numberOfRecords + " record(s) removed\n");
+
+            preparedStatement = connection.prepareStatement(QUERY_REMOVE_BOOK_BY_ID_FROM_LIST);
+            preparedStatement.setInt(1, bookId);
+
+            numberOfRecords = preparedStatement.executeUpdate();
             System.out.println("Removing all books from the shop by id\n" + numberOfRecords + " record(s) removed\n");
 
         } catch (SQLException e) {
             System.out.println("Error connecting to DB");
             e.printStackTrace();
         } finally {
-            if (connection != null) {
-                connection.close();
-            }
-        }
-    }
-
-    public void showAllAvailableBooksInShop() throws SQLException {
-
-        try {
-            connection = DbConnection.createDbConnection();
-
-            Statement statement = connection.createStatement();
-
-            ResultSet resultSet = statement.executeQuery(QUERY_GET_ALL_AVAILABLE_BOOKS);
-
-            ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
-
-            System.out.println("Show all available books in shop\n");
-
-            // printing out column order from List_of_books table
-            int i = 0;
-            while (i < resultSetMetaData.getColumnCount() - 1) {
-                i++;
-                System.out.print(resultSetMetaData.getColumnName(i) + " | ");
-            }
-            System.out.println(resultSetMetaData.getColumnName(i + 1));
-
-            // printing out results
-            while (resultSet.next()) {
-                int listId = resultSet.getInt("List_id");
-                int bookId = resultSet.getInt("Book_id");
-                float price = resultSet.getFloat("Price");
-                String title = resultSet.getString("Title");
-                int availableBooks = resultSet.getInt("Available_books");
-
-                System.out.println(listId + " | " + bookId + " | " + price + " | " + title + " | " + availableBooks);
-            }
-            System.out.println("\n");
-        } catch (SQLException e) {
-            System.out.println("Error connecting to DB");
-            e.printStackTrace();
-        } finally {
-            if (connection != null) {
+            if (connection != null){
                 connection.close();
             }
         }
@@ -103,65 +65,80 @@ public class Bookshop implements SqlQueries {
 
     public void showAllBooksInShop() throws SQLException {
 
+        System.out.println("Show all books in Bookshop: \n");
+        DbConnection.executeQueryListOfBooks(QUERY_GET_ALL_BOOKS_IN_SHOP);
+        System.out.println();
+    }
+
+    public void showAllAvailableBooksInShop() throws SQLException {
+
+        System.out.println("Show all available books in shop\n");
+        DbConnection.executeQueryListOfBooks(QUERY_GET_ALL_AVAILABLE_BOOKS);
+        System.out.println();
+    }
+
+    public void setNumberOfAvailableBooksById(int bookId, int numberOfAvailableBooks) throws SQLException {
+
         try {
             connection = DbConnection.createDbConnection();
 
-            Statement statement = connection.createStatement();
+            PreparedStatement preparedStatement = connection.prepareStatement(QUERY_SET_NUMBER_OF_AVAILABLE_BOOKS_BY_ID);
+            preparedStatement.setInt(1, numberOfAvailableBooks);
+            preparedStatement.setInt(2, bookId);
 
-            ResultSet resultSet = statement.executeQuery(QUERY_GET_ALL_BOOKS_IN_SHOP);
+            int numberOfRecords = preparedStatement.executeUpdate();
+            System.out.println("Changing number of available books with id " + bookId);
+            System.out.println(numberOfRecords + " record(s) updated\n");
 
-            ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
-
-            System.out.println("Show all books in Bookshop: \n");
-
-            // printing out column order from List_of_books table
-            int i = 0;
-            while (i < resultSetMetaData.getColumnCount() - 1) {
-                i++;
-                System.out.print(resultSetMetaData.getColumnName(i) + " | ");
-            }
-            System.out.println(resultSetMetaData.getColumnName(i + 1));
-
-            // printing out results
-            while (resultSet.next()) {
-                int listId = resultSet.getInt("List_id");
-                int bookId = resultSet.getInt("Book_id");
-                float price = resultSet.getFloat("Price");
-                String title = resultSet.getString("Title");
-                int availableBooks = resultSet.getInt("Available_books");
-
-                System.out.println(listId + " | " + bookId + " | " + price + " | " + title + " | " + availableBooks);
-            }
-            System.out.println("");
         } catch (SQLException e) {
             System.out.println("Error connecting to DB");
             e.printStackTrace();
         } finally {
-            if (connection != null) {
+            if (connection != null){
                 connection.close();
             }
         }
     }
 
-    public void setNumberOfAvailableBooksById(int bookId, int availableBooks) throws SQLException {
+    public int getAvailableBooksById(int bookId) throws SQLException {
 
         try {
             connection = DbConnection.createDbConnection();
 
-            PreparedStatement preparedStatement = connection.prepareStatement(QUERY_SET_NUMBER_OF_AVAILABLE_BOOKS);
-            preparedStatement.setInt(1, availableBooks);
-            preparedStatement.setInt(2, bookId);
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(QUERY_GET_NUMBER_OF_AVAILABLE_BOOKS_BY_ID + bookId);
 
-            int numberOfRecords = preparedStatement.executeUpdate();
-            System.out.println("Changing number of available books\n" + numberOfRecords + " record updated\n");
+            return resultSet.getInt("Available_books");
 
         } catch (SQLException e) {
             System.out.println("Error connecting to DB");
             e.printStackTrace();
+            return 0;
         } finally {
-            if (connection != null) {
+            if (connection != null){
                 connection.close();
             }
         }
+    }
+
+    public void sellBookById(int bookId, int numberOfBooks) throws SQLException {
+
+        int availableBooks = getAvailableBooksById(bookId);
+
+        if (availableBooks - numberOfBooks >= 0) {
+            setNumberOfAvailableBooksById(bookId, availableBooks - numberOfBooks);
+            System.out.println("Sold " + numberOfBooks + " books with id " + bookId);
+            System.out.println("Number of available books: " + (availableBooks - numberOfBooks) + "\n");
+        } else {
+            System.out.println("There are not enough books to sell!\nNumber of available books: " + availableBooks + "\n");
+        }
+    }
+
+    public void refundBookById(int bookId) throws SQLException{
+
+        int availableBooks = getAvailableBooksById(bookId);
+
+        setNumberOfAvailableBooksById(bookId, (availableBooks + 1));
+        System.out.println("Refunded a book with id " + bookId + "\nNumber of available books: " + (availableBooks + 1));
     }
 }
