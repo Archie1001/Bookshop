@@ -6,34 +6,7 @@ public class Bookshop implements SqlQueries {
 
     public void addNewBook(Book book) throws SQLException {
 
-        try {
-            connection = DbConnection.createDbConnection();
-
-            PreparedStatement preparedStatement = connection.prepareStatement(QUERY_ADD_NEW_BOOK);
-            preparedStatement.setString(1, book.getTitle());
-            preparedStatement.setString(2, book.getAuthorFirstName());
-            preparedStatement.setString(3, book.getAuthorLastName());
-            preparedStatement.setString(4, book.getGenre());
-            preparedStatement.setInt(5, book.getPublicationDate());
-            preparedStatement.setInt(6, book.getAvailableBooks());
-
-            int numberOfRecords = preparedStatement.executeUpdate();
-            System.out.println("Adding new book: " + book.getTitle() + "\n" + numberOfRecords + " record(s) inserted\n");
-
-            preparedStatement = connection.prepareStatement(QUERY_ADD_NEW_BOOK_TO_SHOP);
-            preparedStatement.setString(1, book.getTitle());
-            preparedStatement.setDouble(2, book.getPrice());
-
-            preparedStatement.executeUpdate();
-
-        } catch (SQLException e) {
-            System.out.println("Error connecting to DB");
-            e.printStackTrace();
-        } finally {
-            if (connection != null){
-                connection.close();
-            }
-        }
+        Utils.executeQueryAddNewBook(book.getTitle(), book.getAuthorFirstName(), book.getAuthorLastName(), book.getGenre(), book.getPublicationDate(), book.getAvailableBooks(), book.getPrice());
     }
 
     public void removeBookById(int bookId) throws SQLException {
@@ -66,14 +39,14 @@ public class Bookshop implements SqlQueries {
     public void showAllBooksInShop() throws SQLException {
 
         System.out.println("Show all books in Bookshop: \n");
-        Utils.executeQueryListOfBooks(QUERY_GET_ALL_BOOKS_IN_SHOP);
+        Utils.executeQueryShowListOfBooks(QUERY_GET_ALL_BOOKS_IN_SHOP);
         System.out.println();
     }
 
     public void showAllAvailableBooksInShop() throws SQLException {
 
         System.out.println("Show all available books in shop\n");
-        Utils.executeQueryListOfBooks(QUERY_GET_ALL_AVAILABLE_BOOKS);
+        Utils.executeQueryShowListOfBooks(QUERY_GET_ALL_AVAILABLE_BOOKS_IN_SHOP);
         System.out.println();
     }
 
